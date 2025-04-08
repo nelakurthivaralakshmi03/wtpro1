@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="order.css">
+  <title>Order Now</title>
+</head>
+<body>
+  <h1 style="margin-left:375px;"><b>ORDER DETAILS</b></h1>
+
+  <div class="address" style="height:1050px; width:400px;text-align:center">
+    <h1><b><center>BILLING ADDRESS</center></b></h1>
+    <form action="success.php" method="post">
+      <label><b>Fullname</b></label><br><br>
+      <input type="text" name="Fullname" required/><br><br>
+
+      <label><b>Email</b></label><br>
+      <br><input type="email" name="email" placeholder="name@gmail.com"  required><br><br>
+
+      <label><b>Address</b></label><br>
+      <br><input type="text" name="address" placeholder="add your address here"  required><br><br>
+
+      <label><b>City</b></label><br>
+      <br><input type="text" name="city" placeholder="city"  required><br><br>
+
+      <label><b>State</b></label><br>
+      <br><input type="text" name="state"  required><br><br>
+
+      <label><b>ZipCode</b></label><br>
+      <br><input type="text" name="zip" placeholder="Zip"  required><br><br>
+
+      <h1><b><center>PAYMENT</center></b></h1>
+
+      <label><b>Accepted Card</b></label><br><br>
+      <img src="visa.png" style="height:50px; width:50px;">&nbsp;&nbsp;&nbsp;
+      <img src="mastercard.png" style="height:50px; width:80px;"><br><br>
+
+      <label><b>Credit Card Number</b></label><br>
+      <br><input type="text" name="credit" placeholder="Enter Valid Card Number"  required><br><br>
+
+      <label><b>Exp Month</b></label><br>
+      <br><input type="text" name="month" placeholder="Enter month"  required><br><br>
+
+      <label><b>Year</b></label><br>
+      <br><select name="year"  required>
+        <option>2024</option>
+        <option>2025</option>
+        <option>2026</option>
+        <option>2027</option>
+        <option>2028</option>
+      </select><br><br>
+
+      <label><b>CVV</b></label><br>
+      <br><input type="text" name="cvv"  required><br><br>
+
+      <!-- Hidden Fields for Order Items and Billing -->
+      <input type="hidden" id="odname" name="odname"  required>
+      <input type="hidden" id="billing" name="billing"  required>
+
+      <center><input type="submit" name="submit" value="Pay to proceed" style = "padding:12.5px;"></center>
+    </form>
+  </div>
+
+  <div class="contents" style="height:1500px;">
+    <div style="text-align: center; margin-top: 50px; background-color: #000000; max-width: 840px; margin: auto;">
+      <img id="image" alt="Recipe Image" style="max-width: 200px; height: 200px;">
+      <h2 id="title" style="color: white; line-height:10px;"></h2>
+      <h2 id="price" style="color: white; padding-bottom:30px;"></h2>
+    </div>
+
+    <div class="details" style="text-align: center; margin: 20px auto; max-width: 840px;">
+      <label for="piece" style="line-height:30px;"><b>How many pieces do you want?</b></label><br><br>
+      <input type="number" id="piece" name="quantity" min="1"><br><br>
+      <button type="button" onclick="addToOrder()">Add to Order</button>
+    </div>
+
+    <!-- Order Summary Section -->
+    <div id="orderSummary" style="display: none; background-color: #f9f9f9; padding: 20px; margin-left:75px; margin-right:75px; height:300px;">
+      <h2>Your Order</h2>
+      <ul id="orderList" style="list-style: none;"></ul>
+    </div>
+
+    <!-- Bill Display Section -->
+    <div id="billSummary" style="display: none; background-color: #000000; padding: 20px; color: white; margin-left:75px; margin-right:75px; width: 80%; text-align: center; position: relative; margin-top:20px;">
+      <h2>Your Total Bill</h2>
+      <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 200px; height: 200px; background-image: url('logo.png'); background-size: contain; background-position: center; background-repeat: no-repeat; opacity: 0.5; z-index: 0;"></div>
+      <p id="totalBill" style="font-size: 18px; font-weight: bold; position: relative; z-index: 1; line-height:150px;">Your total bill is: ₹0</p>
+    </div>
+  </div>
+
+  <script>
+    // Fetch image and item data from sessionStorage
+    const imageData = sessionStorage.getItem('imageData') ? JSON.parse(sessionStorage.getItem('imageData')) : null;
+
+    if (imageData && imageData.url) {
+      document.getElementById('image').src = imageData.url;
+      document.getElementById('title').textContent = imageData.title;
+      document.getElementById('price').innerHTML = `Price: &#8377;${parseFloat(imageData.price).toLocaleString('en-IN')}`;
+    } else {
+      document.body.innerHTML = '<p style="text-align: center; color: red;">No image data available.</p>';
+    }
+
+    let orderItems = JSON.parse(sessionStorage.getItem('orderItems')) || [];
+
+    function addToOrder() {
+      const quantity = parseInt(document.getElementById('piece').value, 10);
+
+      if (!quantity || quantity <= 0) {
+        alert('Please enter a valid quantity.');
+        return;
+      }
+
+      const item = {
+        title: imageData.title,
+        price: parseFloat(imageData.price),
+        quantity: quantity,
+      };
+
+      orderItems.push(item);
+      sessionStorage.setItem('orderItems', JSON.stringify(orderItems));
+
+      if (confirm('Do you want to add more items?')) {
+        window.location.href = 'services.html';
+      } else {
+        updateOrderSummary();
+        calculateTotalBill();
+      }
+    }
+
+    function updateOrderSummary() {
+      const orderSummary = document.getElementById('orderSummary');
+      const orderList = document.getElementById('orderList');
+      orderList.innerHTML = '';
+
+      orderItems.forEach(item => {
+        const li = document.createElement('li');
+        li.textContent = `${item.title} - Quantity: ${item.quantity} - Price: ₹${(item.price * item.quantity).toLocaleString('en-IN')}`;
+        orderList.appendChild(li);
+      });
+
+      document.getElementById('odname').value = orderItems.map(item => `${item.title} (${item.quantity})`).join(', ');
+      orderSummary.style.display = 'block';
+    }
+
+    function calculateTotalBill() {
+      const total = orderItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+      document.getElementById('totalBill').textContent = `Your total bill is: ₹${total.toLocaleString('en-IN')}`;
+      document.getElementById('billing').value = total;
+      document.getElementById('billSummary').style.display = 'block';
+    }
+
+    if (orderItems.length > 0) {
+      updateOrderSummary();
+      calculateTotalBill();
+    }
+  </script>
+</body>
+</html>

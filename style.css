@@ -1,0 +1,151 @@
+
+/* Reset margin and padding */
+body, h1, h2, p, ul {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; 
+}
+
+/* Body and font settings */
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+}
+
+/* Navigation bar styling */
+nav {
+    background-color: #000000;
+    padding: 10px;
+    text-align:center;
+    position:fixed;
+    top:0px;
+    width:100%;
+
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    margin: 0 15px;
+    font-size: 18px;
+    transition: color 0.3s;
+}
+
+nav a:hover {
+    color: #ff9800;
+}
+
+/* Background section styling */
+.background-section {
+    background-image: url('indianrecipe.jpg'); /* Replace with your image path */
+    background-size: cover;
+    background-position: center;
+    color: white;
+    text-align: center;
+    padding: 50px 20px;
+}
+
+.background-section h1 {
+    font-size: 36px;
+    text-shadow: 2px 2px 5px #000;
+}
+
+/* Section styling */
+.box {
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px;
+            background-color: #f9f9f9;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+section {
+    padding: 20px;
+    text-align:justify;
+}
+
+section h1, section h2 {
+    color: #000000;
+    text-align: center;
+}
+
+#services {
+    background-color: #fff;
+    padding: 50px 0;
+    text-align: center;
+}
+
+#services h2 {
+    font-size: 2em;
+    margin-bottom: 30px;
+}
+
+.service-container {
+    display: flex;
+    justify-content: space-around;
+    gap: 20px;
+  
+    max-width: 1200px; /* Adjust max width as needed */
+    margin: 0 auto; /* Centering the container */
+    overflow:hidden;
+    white-space: nowrap;
+    position: relative;
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+.service-box {
+    background-color: #000000;
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 30%;
+    text-align: center;
+    box-sizing: border-box;
+    display: inline-block;
+    animation: scroll 10s linear infinite;
+  
+}
+@keyframes scroll{
+    0% {
+        transform: translateX(0); /* Start at original position */
+    }
+    100% {
+        transform: translateX(-100%); /* Move fully to the left */
+    }
+}
+
+.service-box img {
+    width: 50%;
+    height: 50%;
+    border-radius: 10px;
+    
+}
+
+.service-box h3 {
+    margin-top: 15px;
+}
+
+.book-now{
+    border-radius: 10px;
+    font-size: 20px;
+    padding: 12px 20px;
+    background-color: transparent;
+    color: white;
+    border: 2px solid white;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.book-now:hover {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+footer {
+    background-color: #000000;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    font-size: 14px;
+}
